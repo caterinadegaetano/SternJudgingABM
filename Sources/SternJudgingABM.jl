@@ -3,6 +3,7 @@ module SternJudgingABM
 using Agents
 using Plots
 using StatsPlots
+using CSV
 using Statistics
 using DataFrames
 

@@ -66,29 +66,35 @@ The project uses:
 Install dependencies with:
 
 
+```julia
 using Pkg
-Pkg.add(["Agents", "Plots", "StatsPlots", "DataFrames"])
+Pkg.add(["Agents", "Plots", "StatsPlots", "DataFrames", "CSV"])
+```
 
 
 ## Running the Model
 
 Run all simulations with:
 
-
+```julia
 include("Sources/SternJudgingABM.jl")
 using .SternJudgingABM
 
 run_all()
+```
+
 
 
 Or run individual models:
 
-
+```julia
 run_perfect_info()
 run_noisy_info()
 run_ambiguity()
+```
 
 
-## Purpose
 
-This project explores how ambiguity-aversion affect the emergence and stability of cooperation under indirect reciprocity and imperfect information.
+
+
+

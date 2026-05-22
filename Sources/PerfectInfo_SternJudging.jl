@@ -138,13 +138,15 @@ p3 = plot(data_model.mean_payoff_ALLC, label="ALLC payoff")
 plot!(p3, data_model.mean_payoff_ALLD, label="ALLD payoff")
 plot!(p3, data_model.mean_payoff_COND, label="COND payoff", 
       title="Mean payoff by strategy over time(PERFECT INFO)")
-#print or display data
-display(p1)
-display(p2)
-display(p3)
-println("Final cooperation rate (PERFECT INFO): ", final_coop)
-println("Final Unconditional Cooperators(PERFECT INFO): ", final_ALLC)
-println("Final Unconditional Defectors(PERFECT INFO): ", final_ALLD)
-println("Final Conditional Stern Judging(PERFECT INFO): ", final_COND)
-
+#save data
+savefig(p1, "outputs/Cooperation(PERFECT INFO).png")
+savefig(p2, "outputs/Population(PERFECTINFO).png")
+savefig(p3, "outputs/Payoff(PERFECTINFO).png")
+summary_data = DataFrame(
+    final_ALLC = [final_ALLC],
+    final_ALLD = [final_ALLD],
+    final_COND = [final_COND],
+    final_coop = [final_coop]
+)
+CSV.write("outputs/perfect_summary.csv", summary_data)
 end

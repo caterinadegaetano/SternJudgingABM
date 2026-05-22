@@ -118,13 +118,16 @@ p3 = plot(data_model.mean_payoff_ALLC, label="ALLC payoff")
 plot!(p3, data_model.mean_payoff_ALLD, label="ALLD payoff")
 plot!(p3, data_model.mean_payoff_COND, label="COND payoff", 
       title="Mean payoff by strategy over time(AMBIGUITY)")
-#print or display data
-display(p1)
-display(p2)
-display(p3)
-println("Final cooperation rate(AMBIGUITY): ", final_coop)
-println("Final Unconditional Cooperators(AMBIGUITY): ", final_ALLC)
-println("Final Uncoditional Defectors(AMBIGUITY): ", final_ALLD)
-println("Final Conditional Stern Judging(AMBIGUITY): ", final_COND)
+#save data
+savefig(p1, "outputs/Cooperation(AMBIGUITY).png")
+savefig(p2, "outputs/Population(AMBIGUITY).png")
+savefig(p3, "outputs/Payoff(AMBIGUITY).png")
+summary_data = DataFrame(
+    final_ALLC = [final_ALLC],
+    final_ALLD = [final_ALLD],
+    final_COND = [final_COND],
+    final_coop = [final_coop]
+)
+CSV.write("outputs/ambiguity_summary.csv", summary_data)
 
 end

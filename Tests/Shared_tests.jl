@@ -74,29 +74,29 @@ end
 
 #testing interact
 
-@testset "interact!" begin
+@testset "perfect_interact!" begin
     model = make_test_model()
     agents = collect(allagents(model))
     donor = agents[1]
     recipient = agents[2]
 
-    # cooperation case: ALLC donor should increment C_given and C_received
+    # cooperation case: donor's cooperationshould increment C_given and C_received
     @testset "cooperation updates counts" begin
-        donor.kind = :ALLC
+        donor.strategy = :C
         donor.C_given = 0
         recipient.C_received = 0
-        interact!(donor, recipient, model)
+        perfect_interact!(donor, recipient, model)
         @test donor.C_given == 1
         @test recipient.C_received == 1
         @test donor.strategy == :C
     end
 
-    # defection case: ALLD donor should not change counts
+    # defection case: donor's defection should not change counts
     @testset "defection does not update counts" begin
-        donor.kind = :ALLD
+        donor.strategy = :D
         donor.C_given = 0
         recipient.C_received = 0
-        interact!(donor, recipient, model)
+        perfect_interact!(donor, recipient, model)
         @test donor.C_given == 0
         @test recipient.C_received == 0
         @test donor.strategy == :D
@@ -104,17 +104,107 @@ end
 
     # recipient counts should not be affected by their own action
     @testset "recipient C_given unchanged" begin
-        donor.kind = :ALLC
+        recipient.strategy = :C
         recipient.C_given = 0
-        interact!(donor, recipient, model)
+        perfect_interact!(donor, recipient, model)
         @test recipient.C_given == 0
     end
 
     # donor counts should not be affected by receiving
     @testset "donor C_received unchanged" begin
-        donor.kind = :ALLD
+        donor.strategy = :C
         donor.C_received = 0
-        interact!(donor, recipient, model)
+        perfect_interact!(donor, recipient, model)
+        @test donor.C_received == 0
+    end
+end
+
+@testset "noisy_interact!" begin
+    model = make_test_model()
+    agents = collect(allagents(model))
+    donor = agents[1]
+    recipient = agents[2]
+
+    # cooperation case: donor's cooperationshould increment C_given and C_received
+    @testset "cooperation updates counts" begin
+        donor.strategy = :C
+        donor.C_given = 0
+        recipient.C_received = 0
+        noisy_interact!(donor, recipient, model)
+        @test donor.C_given == 1
+        @test recipient.C_received == 1
+        @test donor.strategy == :C
+    end
+
+    # defection case: donor's defection should not change counts
+    @testset "defection does not update counts" begin
+        donor.strategy = :D
+        donor.C_given = 0
+        recipient.C_received = 0
+        noisy_interact!(donor, recipient, model)
+        @test donor.C_given == 0
+        @test recipient.C_received == 0
+        @test donor.strategy == :D
+    end
+
+    # recipient counts should not be affected by their own action
+    @testset "recipient C_given unchanged" begin
+        recipient.strategy = :C
+        recipient.C_given = 0
+        noisy_interact!(donor, recipient, model)
+        @test recipient.C_given == 0
+    end
+
+    # donor counts should not be affected by receiving
+    @testset "donor C_received unchanged" begin
+        donor.strategy = :C
+        donor.C_received = 0
+        noisy_interact!(donor, recipient, model)
+        @test donor.C_received == 0
+    end
+end
+
+@testset "ambiguity_interact!" begin
+    model = make_test_model()
+    agents = collect(allagents(model))
+    donor = agents[1]
+    recipient = agents[2]
+
+    # cooperation case: donor's cooperationshould increment C_given and C_received
+    @testset "cooperation updates counts" begin
+        donor.strategy = :C
+        donor.C_given = 0
+        recipient.C_received = 0
+        ambiguity_interact!(donor, recipient, model)
+        @test donor.C_given == 1
+        @test recipient.C_received == 1
+        @test donor.strategy == :C
+    end
+
+    # defection case: donor's defection should not change counts
+    @testset "defection does not update counts" begin
+        donor.strategy = :D
+        donor.C_given = 0
+        recipient.C_received = 0
+        ambiguity_interact!(donor, recipient, model)
+        @test donor.C_given == 0
+        @test recipient.C_received == 0
+        @test donor.strategy == :D
+    end
+
+    # recipient counts should not be affected by their own action
+    @testset "recipient C_given unchanged" begin
+        recipient.strategy = :C
+        recipient.C_given = 0
+        ambiguity_interact!(donor, recipient, model)
+        @test recipient.C_given == 0
+    end
+
+    # donor counts should not be affected by receiving
+    @testset "donor C_received unchanged" begin
+        donor.strategy = :C
+        donor.C_received = 0
+        ambiguity_interact!(donor, recipient, model)
         @test donor.C_received == 0
     end
 end
@@ -158,8 +248,8 @@ end
     end
 end
 
-#testing interact
-@testset "agent_step!" begin
+#testing agent_step
+@testset "perfect_agent_step!" begin
     model = make_test_model(5)  # need at least 2 agents
     agents = collect(allagents(model))
     agent = agents[1]
@@ -167,14 +257,14 @@ end
     # agent_step! should add exactly one interaction to the vector
     @testset "adds one interaction" begin
         interactions = Vector{Tuple{Int,Int}}()
-        agent_step!(agent, model, interactions)
+        perfect_agent_step!(agent, model, interactions)
         @test length(interactions) == 1
     end
 
     # the interaction should involve the agent as donor
     @testset "agent is the donor" begin
         interactions = Vector{Tuple{Int,Int}}()
-        agent_step!(agent, model, interactions)
+        perfect_agent_step!(agent, model, interactions)
         donor_id, _ = interactions[1]
         @test donor_id == agent.id
     end
@@ -184,7 +274,7 @@ end
         interactions = Vector{Tuple{Int,Int}}()
         for _ in 1:100  # repeat to cover random cases
             empty!(interactions)
-            agent_step!(agent, model, interactions)
+            perfect_agent_step!(agent, model, interactions)
             _, partner_id = interactions[1]
             @test partner_id != agent.id
         end
@@ -193,7 +283,7 @@ end
     # partner id should be a valid agent in the model
     @testset "partner is a valid agent" begin
         interactions = Vector{Tuple{Int,Int}}()
-        agent_step!(agent, model, interactions)
+        perfect_agent_step!(agent, model, interactions)
         _, partner_id = interactions[1]
         valid_ids = [ag.id for ag in allagents(model)]
         @test partner_id in valid_ids
@@ -205,7 +295,110 @@ end
         agent.kind = :ALLC
         agent.C_given = 0
         interactions = Vector{Tuple{Int,Int}}()
-        agent_step!(agent, model, interactions)
+        perfect_agent_step!(agent, model, interactions)
+        @test agent.C_given == 1  # ALLC always cooperates
+        @test agent.strategy == :C
+    end
+end
+
+@testset "noisy_agent_step!" begin
+    model = make_test_model(5)  # need at least 2 agents
+    agents = collect(allagents(model))
+    agent = agents[1]
+
+    # agent_step! should add exactly one interaction to the vector
+    @testset "adds one interaction" begin
+        interactions = Vector{Tuple{Int,Int}}()
+        noisy_agent_step!(agent, model, interactions)
+        @test length(interactions) == 1
+    end
+
+    # the interaction should involve the agent as donor
+    @testset "agent is the donor" begin
+        interactions = Vector{Tuple{Int,Int}}()
+        noisy_agent_step!(agent, model, interactions)
+        donor_id, _ = interactions[1]
+        @test donor_id == agent.id
+    end
+
+    # agent should never interact with itself
+    @testset "agent never partners with itself" begin
+        interactions = Vector{Tuple{Int,Int}}()
+        for _ in 1:100  # repeat to cover random cases
+            empty!(interactions)
+            noisy_agent_step!(agent, model, interactions)
+            _, partner_id = interactions[1]
+            @test partner_id != agent.id
+        end
+    end
+
+    # partner id should be a valid agent in the model
+    @testset "partner is a valid agent" begin
+        interactions = Vector{Tuple{Int,Int}}()
+        noisy_agent_step!(agent, model, interactions)
+        _, partner_id = interactions[1]
+        valid_ids = [ag.id for ag in allagents(model)]
+        @test partner_id in valid_ids
+    end
+
+    # calling agent_step! should trigger interact! 
+    # so C_given or strategy should be updated
+    @testset "interact! is called" begin
+        agent.kind = :ALLC
+        agent.C_given = 0
+        interactions = Vector{Tuple{Int,Int}}()
+        noisy_agent_step!(agent, model, interactions)
+        @test agent.C_given == 1  # ALLC always cooperates
+        @test agent.strategy == :C
+    end
+end
+@testset "ambiguity_agent_step!" begin
+    model = make_test_model(5)  # need at least 2 agents
+    agents = collect(allagents(model))
+    agent = agents[1]
+
+    # agent_step! should add exactly one interaction to the vector
+    @testset "adds one interaction" begin
+        interactions = Vector{Tuple{Int,Int}}()
+        ambiguity_agent_step!(agent, model, interactions)
+        @test length(interactions) == 1
+    end
+
+    # the interaction should involve the agent as donor
+    @testset "agent is the donor" begin
+        interactions = Vector{Tuple{Int,Int}}()
+        ambiguity_agent_step!(agent, model, interactions)
+        donor_id, _ = interactions[1]
+        @test donor_id == agent.id
+    end
+
+    # agent should never interact with itself
+    @testset "agent never partners with itself" begin
+        interactions = Vector{Tuple{Int,Int}}()
+        for _ in 1:100  # repeat to cover random cases
+            empty!(interactions)
+            ambiguity_agent_step!(agent, model, interactions)
+            _, partner_id = interactions[1]
+            @test partner_id != agent.id
+        end
+    end
+
+    # partner id should be a valid agent in the model
+    @testset "partner is a valid agent" begin
+        interactions = Vector{Tuple{Int,Int}}()
+        ambiguity_agent_step!(agent, model, interactions)
+        _, partner_id = interactions[1]
+        valid_ids = [ag.id for ag in allagents(model)]
+        @test partner_id in valid_ids
+    end
+
+    # calling agent_step! should trigger interact! 
+    # so C_given or strategy should be updated
+    @testset "interact! is called" begin
+        agent.kind = :ALLC
+        agent.C_given = 0
+        interactions = Vector{Tuple{Int,Int}}()
+       ambiguity_agent_step!(agent, model, interactions)
         @test agent.C_given == 1  # ALLC always cooperates
         @test agent.strategy == :C
     end

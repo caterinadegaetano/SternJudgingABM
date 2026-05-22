@@ -151,12 +151,16 @@ p3 = plot(data_model.mean_payoff_ALLC, label="ALLC payoff")
 plot!(p3, data_model.mean_payoff_ALLD, label="ALLD payoff")
 plot!(p3, data_model.mean_payoff_COND, label="COND payoff", 
       title="Mean payoff by strategy over time(NOISY INFO)")
-#print or display data
-display(p1)
-display(p2)
-display(p3)
-println("Final cooperation rate(NOISY INFO): ", final_coop)
-println("Final Unconditional Cooperators(NOISY INFO): ", final_ALLC)
-println("Final Unconditional Defectors(NOISY INFO): ", final_ALLD)
-println("Final Conditional Stern Judging(NOISY INFO): ", final_COND)
+#save data
+
+savefig(p1, "outputs/Cooperation(NOISY).png")
+savefig(p2, "outputs/Population(NOISY).png")
+savefig(p3, "outputs/Payoff(NOISY).png")
+summary_data = DataFrame(
+    final_ALLC = [final_ALLC],
+    final_ALLD = [final_ALLD],
+    final_COND = [final_COND],
+    final_coop = [final_coop]
+)
+CSV.write("outputs/noisy_summary.csv", summary_data)
 end
