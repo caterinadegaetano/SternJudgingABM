@@ -61,7 +61,8 @@ The project uses:
 * Plots.jl
 * StatsPlots.jl
 * DataFrames.jl
-* Statistics
+* Statistics.jl
+* CSV.jl
 
 Install dependencies with:
 
