@@ -51,6 +51,7 @@ Evolution follows a Fermi imitation rule with mutation.
 * `Ambiguity_SternJudging.jl` — ambiguity model
 * `SternJudgingABM.jl` — main module
 * `Run.jl` — script to execute simulations
+* `Outputs.jl` — results for the three models
 
 ## Requirements
 
