@@ -8,18 +8,10 @@ author:
     email: caterina.degaetano@carloalberto.org
     affiliations: Uni Turin, Collegio Carlo Alberto
 
-jupyter: julia-1.11
----
-```{julia}
-using CSV, DataFrames
 
-perfect_summary= CSV.read("outputs/perfect_summary.csv", DataFrame)
-perfect_population_data = select(perfect_summary, :pct_ALLC, :pct_ALLD, :pct_COND)
-noisy_summary = CSV.read("outputs/noisy_summary.csv", DataFrame)
-noisy_population_data = select(noisy_summary, :pct_ALLC, :pct_ALLD, :pct_COND)
-ambiguity_summary= CSV.read("outputs/ambiguity_summary.csv", DataFrame)
-ambiguity_population_data = select(ambiguity_summary, :pct_ALLC, :pct_ALLD, :pct_COND)
-```
+---
+
+
 ::: {.callout-note}
 
 # Collegio Carlo Alberto Project
@@ -59,13 +51,15 @@ The simulations reproduce the main findings of the literature on indirect recipr
 ## Perfect Information 
 Under perfect information, agents can accurately observe the reputation of others. In this setting, conditional agents cooperate with reputable individuals and defect against badly reputed ones, successfully enforcing cooperative norms
 Under perfect information and with small implementation errors (“trembling hand”), conditional cooperators remain evolutionarily stable and sustain high levels of cooperation over time. The population quickly converges toward a state dominated by conditional agents, while unconditional defectors are unable to successfully invade the population.
+
 ![](outputs/Population(PERFECTINFO).png)
+
 This allows level of cooperations to stay high during the whole part of the evolutionary dynamics.
+
 ![](outputs/Cooperation(PERFECTINFO).png)
-After 100.000 rounds with 100 agents, the final level of cooperation is `r perfect_summary.final_coop`and population shares are the following:
-```{julia}
-perfect_population_data
-```
+
+
+
 ## Noisy Information
 When reputational information becomes noisy or imperfect, the dynamics change substantially. Errors in observing reputations reduce the ability of conditional agents to correctly discriminate between cooperative and defective individuals.
 Consistent with the literature:
@@ -79,18 +73,19 @@ Consistent with the literature:
 ![](outputs/Cooperation(Noisy).png)
 
 - Reputation mechanisms become less effective under uncertainty.
-- The population converges toward low-cooperation equilibria. Indeed the final level of cooperation, after 100.000 rounds, is `r noisy_summary.final_coop`.
+- The population converges toward low-cooperation equilibria. 
 
 The ambiguity-averse extension produces qualitatively similar outcomes under imperfect information. Conditional agents still fail to sustain cooperation in the long run, and defectors eventually dominate the population.
 
 However, the simulations suggest that:
 
 - The transition toward a whole population of defectors occurs more rapidly.
+
 ![](outputs/Population(NOISY).png)
+
 ![](outputs/Population(AMBIGUITY).png)
 
 - Cooperation deteriorates faster than in the standard noisy-information setting.
 
-- Ambiguity aversion amplifies the destabilizing effect of informational uncertainty. THe final level of cooperation has been in this case: `r ambiguity_summary.final_coop`
-
+- Ambiguity aversion amplifies the destabilizing effect of informational uncertainty. 
 Overall, the results highlight the central importance of reliable reputational information for sustaining indirect reciprocity. Even small imperfections in information transmission can undermine cooperative norms, while ambiguity aversion further accelerates the breakdown of cooperation.
