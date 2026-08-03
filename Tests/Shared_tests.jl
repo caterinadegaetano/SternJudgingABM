@@ -1,3 +1,16 @@
+#test for implementation error
+@testset "perfect_strategy error behavior" begin
+    # Fake conditional rule
+    perfect_conditional(d,r,m) = :C
+    model = (p_error = 1.0,)   # always error
+    donor = (kind = :COND,)
+    recipient = nothing
+
+    @test perfect_strategy(donor, recipient, model) == :D
+
+    perfect_conditional(d,r,m) = :D
+    @test perfect_strategy(donor, recipient, model) == :D
+end
 
 #testing Objective Reputation update
 @testset "reputation update" begin

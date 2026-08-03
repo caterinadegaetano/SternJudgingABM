@@ -1,44 +1,61 @@
 #update rules for reputation priors
-function true_update(p::Float64, donor::Agent, model)
-    return model.θ[donor.id] == :G ? 1.0 : 0.0
+function true_update!(p::Float64, agent::Agent, donor::Agent, recipient::Agent, model)
+    if mean(model.rep[agent.id, recipient.id]) ≥ 0.5 && donor.strategy==:C
+         p=0.9
+     elseif mean(model.rep[agent.id, recipient.id]) < 0.5 && donor.strategy==:D
+         p=0.9
+     else  p= 0.1
+     end
 end
 
 
 function add_prior!(agent::Agent, model)
-    return model.θ[agent.id] == :G ? 0.7 : 0.3
+return prior=0.5
 end
 
  
-function mutate_prior(p::Float64)
-    q = p+ 0.2*(rand() - 0.5)
-   return clamp(q, 0.01, 0.99)
-    
+function misperception_update!(p::Float64, agent::Agent, donor::Agent, recipient::Agent, model)
+#Observer sees the opposite of what the donor does
+    actual_action = donor.strategy
+    perceived_action = (actual_action == :C ? :D : :C) 
+
+#and then applies SternJudging norm to it
+    if mean(model.rep[agent.id, recipient.id]) ≥ 0.5 && perceived_action==:C
+         p=0.9
+     elseif mean(model.rep[agent.id, recipient.id]) < 0.5 && perceived_action==:D
+         p=0.9
+     else  p= 0.1
+    end
 end
 
 
-function update_priors!(agent::Agent, donor::Agent, model)
+function update_priors!(agent::Agent, donor::Agent, recipient::Agent, model)
     i = agent.id
     j = donor.id
     r = rand(abmrng(model))
-
+    p_random=rand(1:length(model.rep[i,j]))
+    p=model.rep[i, j][p_random]
     # Truthful update
-    if r < model.p_truth
-        model.rep[i, j] = [true_update(p, donor, model) for p in model.rep[i, j]]
-        return
-    end
+    if r < model.p_observe
 
-    # Adding a new prior
-    if r < model.p_truth + model.p_update
+      model.rep[i, j][p_random]  = true_update!(p, agent, donor, recipient, model)
+    
+    
+    #Noisy update
+    elseif r < model.p_observe + model.p_misperception
+        
+      model.rep[i, j][p_random] = misperception_update!(p, agent, donor, recipient, model)
+
+
+    # Adding a new prior when there is no new observation
+    else 
+
         if length(model.rep[i, j]) < model.max_priors
             push!(model.rep[i, j], add_prior!(agent, model))
         else #if max of priors reached, change an existing one
-            idx = rand(1:length(model.rep[i, j]))
-            model.rep[i, j][idx] = add_prior!(agent, model)
+            model.rep[i, j][p_random] = add_prior!(agent, model)
         end
-        return
+    
     end
 
-    # Changing an existing prior
-    idx = rand(1:length(model.rep[i, j]))
-    model.rep[i, j][idx] = mutate_prior(model.rep[i, j][idx])
 end

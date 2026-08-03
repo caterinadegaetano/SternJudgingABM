@@ -1,11 +1,9 @@
 #utility function
 function utility(strategy, θ)
 if θ==:G  && strategy==:C
-    2
+    1
 elseif θ==:B && strategy==:D
     1
-elseif θ==:G && strategy==:D
-    -1
 else 0
 end
 end
@@ -32,10 +30,9 @@ function ambiguity_conditional(donor::Agent, recipient::Agent, model)
     return actions[argmax(utilities)]
 end
 
-#stratgey according to the kind of agents
+#strategy according to the kind of agents
 
 function ambiguity_strategy(donor::Agent, recipient::Agent, model)
-    S=Set([:C,:D])
  if rand(abmrng(model))> model.p_error
     if donor.kind == :ALLD
         return :D
@@ -44,13 +41,15 @@ function ambiguity_strategy(donor::Agent, recipient::Agent, model)
     else
         return ambiguity_conditional(donor, recipient, model)
     end
-else
-    if donor.kind == :ALLD
-        return :C
-    elseif donor.kind == :ALLC
+else  #implementation error
+     if donor.kind == :ALLC || donor.kind == :ALLD
         return :D
-    else
-        return rand(S)
+    elseif donor.kind == :COND
+        if ambiguity_conditional(donor, recipient, model) == :C
+            return :D
+        else
+            return :C
+        end
     end
 end
 end

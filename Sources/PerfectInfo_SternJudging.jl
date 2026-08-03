@@ -1,114 +1,83 @@
  
-function perfect_conditional(donor::Agent, recipient::Agent, model)
-    if model.θ[recipient.id] == :G
-        return :C
-    else
-        return :D
-    end
-end
-
-function perfect_strategy(donor::Agent, recipient::Agent, model)
-S=Set([:C, :D])
-if rand(abmrng(model))> model.p_error
-    if donor.kind == :ALLD
-        return :D
-    elseif donor.kind == :ALLC
-        return :C
-    else
-        return perfect_conditional(donor, recipient, model)
-    end
-else
-    if donor.kind == :ALLD
-        return :C
-    elseif donor.kind == :ALLC
-        return :D
-    else
-        return rand(S)
-    end
-end
-end
-
-#the gift game
-function perfect_interact!(donor::Agent, recipient::Agent, model)
-    action = perfect_strategy(donor, recipient, model)
-    donor.strategy=action
-    if action == :C
-        donor.C_given += 1
-        recipient.C_received += 1
-    end
-end
-
-#step function at the agent level
-function perfect_agent_step!(agent, model, interactions::Vector)
-    all = collect(allagents(model))
-    partner = rand(abmrng(model), all)
-    while partner.id == agent.id
-        partner = rand(abmrng(model), all)
-    end
-    push!(interactions, (agent.id, partner.id))
-    perfect_interact!(agent, partner, model)
-end
+include("PI_GiftGame.jl")
 
 include("SharedFunctions.jl")
 
+
+#step function at the model level
 function perfect_model_step!(model)
-interactions = Vector{Tuple{Int,Int}}() 
 for ag in allagents(model) #previous rounds cooperation doesn't count
         ag.C_given = 0
         ag.C_received = 0
         ag.strategy = :D
     end
-for ag in allagents(model) 
-        perfect_agent_step!(ag, model, interactions)
+
+# random donor
+donor=rand(abmrng(model), allagents(model))
+
+#random recipient forced to be different from the donor
+all = collect(allagents(model))
+recipient = rand(abmrng(model), all)
+    while recipient.id == donor.id
+        recipient = rand(abmrng(model), all)
     end
-#reputation update at the objective level
-for (donor_id, ag_id) in interactions
-   donor = model[donor_id]
-    ag = model[ag_id]
-    rep_update!(donor, ag, model) 
+
+#one round of gift game per step
+  perfect_interact!(donor, recipient, model)
+
+#tracking cooperation
+if donor.strategy == :C
+    model.coop_window_count += 1
 end
 
-#payoff computation
+if abmtime(model) % model.coop_window == 0
+    push!(model.coop_window_log, model.coop_window_count / model.coop_window)
+    model.coop_window_count = 0
+end
 
- for ag in allagents(model)
-        payoff!(ag, model)
-    end
- 
+
+#objective reputation update
+    rep_update!(donor, recipient, model)
+
+#payoff computation of donor and recipient of the gift game
+
+payoff!(donor, model)
+payoff!(recipient, model)
+
+#update of the times an agent has played
+donor.n_played+=1
+recipient.n_played+=1
+
+#update of the average payoff of the playing agents
+av_payoff!(donor)
+av_payoff!(recipient)
+
+
 #the evolution dynamic
 
 all = collect(allagents(model))
+#evolution happens every n steps
+  
 #only a percentage of agents evolve
-evolving = rand(abmrng(model), all, max(1, round(Int, model.p_evolve * length(all))))
-for ag in evolving
-others = [a for a in all if a.id != ag.id]
-other_ag = rand(abmrng(model), others)
-all_kinds = [:ALLC, :ALLD, :COND]
-other_kinds = setdiff(all_kinds, [ag.kind])
-
-p_imitation = 1 / (1 + exp(-5*(other_ag.payoff - ag.payoff ))) 
-if rand(abmrng(model)) < model.p_mutation #random mutation
-    ag.kind = rand(abmrng(model), other_kinds)
-else
-    if rand(abmrng(model)) < p_imitation #Fermi imitation rule used by Hilbe et al(2018)
-        ag.kind = other_ag.kind
+  evolving = rand(abmrng(model), all, max(1, round(Int, model.p_evolve * length(all))))
+    for ag in evolving
+       evolution_step!(ag, model)
     end
-end
-end
+  
 end
 
 include("DataFunctions.jl")
 
-function run_perfect_info(steps=100000)
-
+#the running funtion for the perfect info model
+function run_perfect_info(steps=1.0e7)
 
 #defining the model
 model = StandardABM(Agent; properties=properties, scheduler=Schedulers.Randomly(),  model_step! = perfect_model_step!)
-#populating the model
+#populating the model with conditional agents
 for i in 1:N
-    kind = :COND 
-    add_agent!(model; kind=kind, C_given=0, C_received=0, payoff=0, strategy=:C)
+    add_agent!(model; kind= :COND, C_given=0, C_received=0, n_played=0, payoff=0.0, av_payoff=0.0, strategy=:C)
 end
-#filling reputation parameters
+#filling reputation parameters: everyone starts with a good reputation
 model.θ .= :G
 #finally run the model!
 _, data_model = run!(model, steps;
@@ -118,15 +87,18 @@ _, data_model = run!(model, steps;
 
 
 #and access the data
-final_ALLC = data_model.pct_ALLC[end] #
-final_ALLD = data_model.pct_ALLD[end]
-final_COND = data_model.pct_COND[end]
-final_coop = data_model.pct_cooperation[end]
+final_ALLC = mean(data_model.pct_ALLC[end-999:end])
+final_ALLD = mean(data_model.pct_ALLD[end-999:end])
+final_COND = mean(data_model.pct_COND[end-999:end])
+final_coop = mean(data_model.pct_cooperation[end-999:end])
 
 #and plot the dynamics
 
 # cooperation over time
-p1 = plot(data_model.pct_cooperation, title="Cooperation over time(PERFECT INFO)", ylabel="pct C", xlabel="t")
+p1 = plot(model.coop_window_log,
+    title = "Cooperation rate over time (windowed, PERFECT INFO)",
+    xlabel = "block (each = $(Noisy_properties.coop_window) steps)",
+    ylabel = "cooperation rate")
 
 # kinds over time
 p2 = plot(data_model.pct_ALLC, label="Unconditional Cooperators")
@@ -143,10 +115,10 @@ savefig(p1, "outputs/Cooperation(PERFECT INFO).png")
 savefig(p2, "outputs/Population(PERFECTINFO).png")
 savefig(p3, "outputs/Payoff(PERFECTINFO).png")
 summary_data = DataFrame(
-    final_ALLC = [final_ALLC],
-    final_ALLD = [final_ALLD],
-    final_COND = [final_COND],
-    final_coop = [final_coop]
+    av_final_ALLC = [final_ALLC],
+    av_final_ALLD = [final_ALLD],
+    av_final_COND = [final_COND],
+    av_final_coop = [final_coop]
 )
 CSV.write("outputs/perfect_summary.csv", summary_data)
 end

@@ -5,79 +5,72 @@ include("SharedFunctions.jl")
 include("Priors.jl")
 
 
-function ambiguity_agent_step!(agent, model, interactions::Vector)
-    all = collect(allagents(model))
-    partner = rand(abmrng(model), all)
-    while partner.id == agent.id
-        partner = rand(abmrng(model), all)
-    end
-    push!(interactions, (agent.id, partner.id))
-    ambiguity_interact!(agent, partner, model)
-end
-
 function ambiguity_model_step!(model)
-interactions = Vector{Tuple{Int,Int}}() 
 
-#playing the game
 for ag in allagents(model) #previous rounds cooperation doesn't count
         ag.C_given = 0
         ag.C_received = 0
+         ag.strategy = :D
     end
-for ag in allagents(model) 
-        ambiguity_agent_step!(ag, model, interactions)
+#selecting random donor
+donor=rand(abmrng(model), allagents(model))
+
+#selecting random recipient forcing it to be different from the donor
+ all = collect(allagents(model))
+    recipient = rand(abmrng(model), all)
+    while recipient.id == donor.id
+        recipient = rand(abmrng(model), all)
     end
 
-#reputation update at the objective level
-for (donor_id, ag_id) in interactions
-   donor = model[donor_id]
-    ag = model[ag_id]
-    rep_update!(donor, ag, model) 
+#gift game
+ ambiguity_interact!(donor, recipient, model)
+
+#tracking cooperation
+if donor.strategy == :C
+    model.coop_window_count += 1
 end
+
+if abmtime(model) % model.coop_window == 0
+    push!(model.coop_window_log, model.coop_window_count / model.coop_window)
+    model.coop_window_count = 0
+end
+
 
 #reputation update in agents' priors
-
-for (donor_id, recipient_id) in interactions
-    donor = model[donor_id]
-
-  for observer in allagents(model)
-        update_priors!(observer, donor, model)
-    end
-end
-
+ for observer in allagents(model)
+        update_priors!(observer, donor, recipient, model)
+ end
 
 #payoff computation
+payoff!(recipient, model)
+payoff!(donor, model)
 
- for ag in allagents(model)
-        payoff!(ag, model)
-end
+#update of the times an agent has played
+donor.n_played+=1
+recipient.n_played+=1
+
+#update of the average payoff of the playing agents
+av_payoff!(donor)
+av_payoff!(recipient)
  
 #the evolution dynamic
 
 all = collect(allagents(model))
-#only a percentage of agents evolve
-evolving = rand(abmrng(model), all, max(1, round(Int, model.p_evolve * length(all))))
-for ag in evolving
-others = [a for a in all if a.id != ag.id]
-other_ag = rand(abmrng(model), others)
-all_kinds = [:ALLC, :ALLD, :COND]
-other_kinds = setdiff(all_kinds, [ag.kind])
-p_imitation = 1 / (1 + exp(-5*(other_ag.payoff - ag.payoff ))) 
+#evolution happens every n steps
 
-if rand(abmrng(model)) < model.p_mutation #random mutation
-    ag.kind = rand(abmrng(model), other_kinds)
-else
-    if rand(abmrng(model)) < p_imitation #Fermi imitation rule used by Hilbe et al(2018)
-        ag.kind = other_ag.kind
+#only a percentage of agents evolve
+  evolving = rand(abmrng(model), all, max(1, round(Int, model.p_evolve * length(all))))
+    for ag in evolving
+       evolution_step!(ag, model)
     end
-end
-end
+  
 end
 
 include("DataFunctions.jl")
 
 
 
-function run_ambiguity(steps=100000)
+function run_ambiguity(steps=1.0e4)
 
 
 #defining the model
@@ -85,10 +78,9 @@ model = StandardABM(Agent; properties=Ambiguity_properties, scheduler=Schedulers
 #populating the model
 for i in 1:N
     kind = :COND 
-    add_agent!(model; kind=kind, C_given=0, C_received=0, payoff=0, strategy=:C)
+    add_agent!(model; kind=kind, C_given=0, C_received=0, n_played=0, payoff=0.0, av_payoff=0.0, strategy=:C)
 end
 #filling reputation parameters
-model.θ .= :G
 model.rep = [[1.0] for _ in 1:N, _ in 1:N]
 #finally run the model!
 _, data_model = run!(model, steps;
@@ -98,15 +90,24 @@ _, data_model = run!(model, steps;
 
 
 #and access the data
-final_ALLC = data_model.pct_ALLC[end] #
-final_ALLD = data_model.pct_ALLD[end]
-final_COND = data_model.pct_COND[end]
-final_coop = data_model.pct_cooperation[end]
+final_ALLC = mean(data_model.pct_ALLC[end-999:end])
+final_ALLD = mean(data_model.pct_ALLD[end-999:end])
+final_COND = mean(data_model.pct_COND[end-999:end])
+final_coop = mean(data_model.pct_cooperation[end-999:end])
 
 #and plot the dynamics
 
+#all_n_played = vcat(first.(model.comparison_n_played_log), last.(model.comparison_n_played_log))
+#n_played_hist = histogram(all_n_played, xlabel="n_played at comparison", ylabel="count")
+#display(n_played_hist)
+#println("min n_played at comparison: ", minimum(all_n_played))
+#println("5th percentile: ", quantile(all_n_played, 0.05))
+
 # cooperation over time
-p1 = plot(data_model.pct_cooperation, title="Cooperation over time(AMBIGUITY)", ylabel="pct C", xlabel="t")
+p1 = plot(model.coop_window_log,
+    title = "Cooperation rate over time (windowed, NOISY INFO)",
+    xlabel = "block (each = $(Noisy_properties.coop_window) steps)",
+    ylabel = "cooperation rate")
 
 # kinds over time
 p2 = plot(data_model.pct_ALLC, label="Unconditional Cooperators")
@@ -123,10 +124,10 @@ savefig(p1, "outputs/Cooperation(AMBIGUITY).png")
 savefig(p2, "outputs/Population(AMBIGUITY).png")
 savefig(p3, "outputs/Payoff(AMBIGUITY).png")
 summary_data = DataFrame(
-    final_ALLC = [final_ALLC],
-    final_ALLD = [final_ALLD],
-    final_COND = [final_COND],
-    final_coop = [final_coop]
+    av_final_ALLC = [final_ALLC],
+    av_final_ALLD = [final_ALLD],
+    av_final_COND = [final_COND],
+    av_final_coop = [final_coop]
 )
 CSV.write("outputs/ambiguity_summary.csv", summary_data)
 

@@ -23,7 +23,7 @@ include("NoisyInfo_SternJudging.jl")
 #Model with ambiguity averse agents
 include("Ambiguity_SternJudging.jl")
 
-function run_all(steps=100000)
+function run_all(steps=1.0e7)
     println("Running Perfect Info model")
     data_perfect = run_perfect_info(steps)
     
