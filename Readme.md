@@ -2,6 +2,9 @@
 
 An Agent-Based Model in Julia implementing the **Stern Judging** norm of indirect reciprocity under different information conditions.
 
+### Report: 
+https://caterinadegaetano.github.io/SternJudgingABM/
+
 ## Overview
 
 This project studies the evolution of cooperation in populations of agents playing a repeated gift game. Agents can adopt different behavioral strategies and update reputations according to the Stern Judging social norm.
@@ -51,6 +54,7 @@ Evolution follows a Fermi imitation rule with mutation.
 * `Ambiguity_SternJudging.jl` — ambiguity model
 * `SternJudgingABM.jl` — main module
 * `Run.jl` — script to execute simulations
+* `Outputs.jl` — results for the three models
 
 ## Requirements
 

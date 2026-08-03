@@ -76,7 +76,7 @@ Then, under perfect information and with small implementation errors, conditiona
 
 This allows level of cooperations to stay high during the whole path of the evolutionary dynamics.
 
-![](outputs/Cooperation(PERFECTINFO).png)
+![](outputs/Cooperation(PERFECT INFO).png)
 
 The average level of cooperation in the last $10 /times 10^2$ step is `{julia} round(final_coop_perfect, digits=3)`.
 
@@ -91,7 +91,7 @@ Consistent with the literature:
 
 - Cooperation levels collapse over time.
 
-![](outputs/Cooperation(Noisy).png)
+![](outputs/Cooperation(NOISY).png)
 
 Indeed, the average level of cooperation in the last $10 /times 10^2$ step is `{julia} round(final_coop_noisy, digits=3)`.
 
@@ -117,9 +117,11 @@ However, the simulations suggest that:
 
 - Cooperation deteriorates faster than in the standard noisy-information setting.
 
+
 Indeed, the average level of cooperation in the last $10 /times 10^2$ step is `{julia} round(final_coop_ambiguity, digits=3)`.
 
 
 - Ambiguity aversion seems to amplify the destabilizing effect of informational uncertainty. 
 
 The conclusion that can be drawn from this simulation is that having ambiguity averse conditional players that have a maxmin utility function as behavioural rule, as implemented with this model, does not improve the level of cooperation in a noisy environment and does not solve the evolutionary instability of Stern Judging. 
+
