@@ -9,7 +9,7 @@ final_coop_noisy = noisy_summary.av_final_coop[1]
 
 
 ambiguity_summary = CSV.read("outputs/ambiguity_summary.csv", DataFrame)
-final_coop_ambiguity = ambiguity_summary.final_coop[1]
+final_coop_ambiguity = ambiguity_summary.av_final_coop[1]
 ```
 ---
 title: "CCA `CompEcon` Project"

@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Caterina De Gaetano">
 
 <title>CCA CompEcon Project</title>
 <style>
@@ -24,21 +23,85 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="Report_files/libs/clipboard/clipboard.min.js"></script>
-<script src="Report_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="Report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="Report_files/libs/quarto-html/popper.min.js"></script>
-<script src="Report_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="Report_files/libs/quarto-html/anchor.min.js"></script>
-<link href="Report_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Report_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="Report_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="Report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Report_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="report_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="report_files/libs/quarto-html/popper.min.js"></script>
+<script src="report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="report_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="report_files/libs/bootstrap/bootstrap-efbb37e9afcc02144ebbc7afd12a776f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -51,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">CCA <code>CompEcon</code> Project</h1>
-<p class="subtitle lead">Agent Based Model inspired by Christian Hilbea, Laura Schmida, Josef Tkadleca, Krishnendu Chatterjeea, and Martin A. Nowak (PNAS, 2018)</p>
+<p class="subtitle lead">Agent Based Model inspired by Christian Hilbe, Laura Schmid, Josef Tkadlec, Krishnendu Chatterjee, and Martin A. Nowak (PNAS, 2018)</p>
 </div>
 
 
@@ -81,6 +144,21 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div id="2" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>perfect_summary<span class="op">=</span>CSV.<span class="fu">read</span>(<span class="st">"outputs/perfect_summary.csv"</span>, DataFrame)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>final_coop_perfect <span class="op">=</span> perfect_summary.av_final_coop[<span class="fl">1</span>]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>noisy_summary <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"outputs/noisy_summary.csv"</span>, DataFrame)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>final_coop_noisy <span class="op">=</span> noisy_summary.av_final_coop[<span class="fl">1</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>ambiguity_summary <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"outputs/ambiguity_summary.csv"</span>, DataFrame)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>final_coop_ambiguity <span class="op">=</span> ambiguity_summary.av_final_coop[<span class="fl">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>0.004199999999999999</code></pre>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -96,7 +174,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <section id="research-goal" class="level2">
 <h2 class="anchored" data-anchor-id="research-goal">Research Goal</h2>
-<p>In the evolutionary game theory literature, it has been shown that cooperation among agents can be established when agents adopt a conditional strategy. In particular, indirect reciprocity has been studied through simulation implementing tournament of a gift game. In a gift game a donor and a recipient are matched together and the donor can decide to gift a benefit b to the recipient at a cost c.&nbsp;The game is interesting because, in particular with large group with perfect information, the donor’s choice can be determined mainly by indirect reciprocity (i.e.&nbsp;A decides to cooperate with B only if B has previously cooperated with C). Indeed, it is a game where reputation, and information about reputation, plays an important role. Eight conditional strategies, the leading eights, have been proved to provide consistent cooperation over time and to be immune of invasions both by unconditional defectors (ALLD) and unconditional cooperators(ALLC) under some conditions. In particular, Ohtsuki and Iwasa (2004; 2006) and showed that Stern Judging, one of the leading eights, is evolutionary stable only when there is a trembling hand situation in applying the norm by the conditional players and ALLD sometimes cooperate and ALLC sometimes defect. Otherwise conditional cooperators are invaded by ALLC, which in turn are invaded by ALLD: However, the recent work by Hilbe et al (2018) shows that when information is noisy and reputations are not univocally shared by all conditional players, cooperation collapses and conditional players either do not survive or enter into cycle of invasions with ALLD. One strategy that suffers particurarly from this noisy information is Stern Judging. According to Stern Judging, an agent should always cooperate with a player with good reputation and awalys defect with a players with a bad reputation. Hence, a good reputation is caused by cooperating with someone good and defecting with someone bad, and a bad reputation is caused by defecting with someone good and cooperating with someone bad. Given this, the present research projects aims at verifying whether having ambiguity averse players can solve the collapse of cooperation due to imperfect information. The ambiguity aversion of players is represented through a maxmin utility function (Gilboa and Schmeidler, 1986). Different players hold different priors abouth others’ reputation and instead of simply following the norm, agents’ behaviour is the strategy that maximize the minum possible utility according to their priors. I thus decided to implement an Agent Based Model(ABM), with three type of agents: ALLC, ALLD and ambiguity averse conditional players following the Stern Judging Norm Then all agents at each period play as donor in a gift game with a random partner (this means that an agent plays as donor only once in a period but can play as a recipient many or zero times in a period). The prior can be update truthfully with a high probability (0.5), or it can be wrongly updated (0.2) or a new prior can be added (0.1). The evolution dynamics start with a population od only conditional players. Randomly, one agent each turn has a small probability (0.001) of randomly mutate kind, otherwise she learn according to the Fermi imitation rule the kind of another random agent. The Fermi imitation rule is such that the higher the payoff of the random agent selected the higher the probability for the imitating agent to learn his kind. I implemented also the case with perfect information and noisy information, using the data by the authors, to check that my model for ambiguity averse agents was not biased.</p>
+<p>In the evolutionary game theory literature, it has been shown that cooperation among agents can be established and maintained when agents adopt a conditional strategy. In particular, indirect reciprocity has been studied through simulation implementing tournament of a gift game. In a gift game a donor and a recipient are matched together and the donor can decide to gift a benefit <span class="math inline">\(b\)</span> to the recipient at a cost <span class="math inline">\(c\)</span> with <span class="math inline">\(b &gt; c\)</span>. The donor’s choice can be determined mainly by indirect reciprocity (i.e.&nbsp;X decides to cooperate with Y only if Y has previously cooperated with Z). Indeed, the gift game is a game where reputation, and information about reputation, plays an important role. Eight conditional strategies, the Leading Eights, have been proved to provide consistent cooperation over time and to be immune to invasions both by unconditional defectors (ALLD) and unconditional cooperators(ALLC) under some conditions. In particular, Ohtsuki and Iwasa (2004; 2006) show that the Leading Eights are evolutionary stable when there is a) perfect information: everyone observe correctly every other actions and update correctly according to the norm the donor reputation; and b) an implementation error in the action choice: randomly the agent does not implement the action prescribed by its strategy. In particular, whent cooperation is intended, dfection is instead implemented. However, the work by Hilbe et al (2018) shows that when information is noisy and reputations are not univocally shared by all conditional players, cooperation collapses and conditional players, depending on the norm, can either enter into cycle of invasions with unconditional players or even be permanently invaded. The present work focuses on the Stern Judging (SJ) norm as an example of a norm such that if conditional players follow it, under noiys information not only cooperation collapses but conditional players are also completely invaded by ALLD. According to Stern Judging, an agent should always cooperate with a player with good reputation and always defects with a player with a bad reputation (the reputation of the donor is not decisive, i.e.&nbsp;SJ is a norm relying on second order information). Hence, a good reputation is caused by cooperating with someone good and defecting with someone bad, and a bad reputation is caused by defecting with someone good and cooperating with someone bad. Given this, the present research projects aims at investigating the effect of having ambiguity averse players on the collapse of cooperation due to imperfect information and on the evolutionary dynamics of a population of conditional players following the Stern Judging norm. The ambiguity aversion of players is represented through a maxmin utility function (Gilboa and Schmeidler, 1986). Different players hold different priors about others’ reputation and instead of simply following the norm, agents’ behaviour is the action (cooperation or defection) that maximizes the minimum possible utility according to their priors. I thus decided to implement an Agent Based Model(ABM), with three type of agents: ALLC, ALLD and ambiguity averse conditional players following the Stern Judging norm. I implement also a model with perfect information and a model with noisy information, using parameters common in the literature, to compare them with the results of the model wih ambiguity averse agents.</p>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <p>Gilboa, I., &amp; Schmeidler, D. (1989). Maxmin expected utility with a non-unique prior. Journal of Mathematical Economics, 18(2), 141–153. Hilbe, C., Schmid, L., Tkadlec, J., Chatterjee, K., &amp; Nowak, M. A. (2018). Indirect reciprocity with private, noisy, and incomplete information. Proceedings of the National Academy of Sciences, 115(48), 12241–12246. Ohtsuki H, Iwasa Y (2004) How should we define goodness?—Reputation dynamics in indirect reciprocity. J Theor Biol 231:107–120. Ohtsuki H, Iwasa Y (2006) The leading eight: Social norms that can maintain cooperation by indirect reciprocity. J Theor Biol 239:435–444.</p>
@@ -104,18 +182,27 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="high-level-description-of-computational-problem-in-paper" class="level2">
 <h2 class="anchored" data-anchor-id="high-level-description-of-computational-problem-in-paper">High Level Description of Computational Problem in Paper</h2>
-<p>This paper develops an agent-based computational model of indirect reciprocity under the Stern Judging norm. The main computational task consists of simulating repeated gift-game interactions among heterogeneous agents under different informational environments: perfect information, noisy information, and ambiguity aversion.</p>
-<p>Agents are characterized by reputational states and behavioral strategies (<code>ALLC</code>, <code>ALLD</code>, and conditional cooperators). In each simulation step, agents are randomly matched to interact in a donation game where cooperation decisions depend on the recipient’s reputation for conditional agents while ALLC and ALLD always cooperate and defect respectively. An action error is included such that with a low probability agents deviate from their rules. Reputation dynamics follow the Stern Judging update rule.</p>
-<p>The model implements several computational procedures. Under noisy information, agents may experience observation errors and misperception. Under ambiguity aversion, agents maintain multiple priors over reputations and choose actions according to a maxmin expected utility criterion. Utilities are computed by evaluating the minimum expected payoff across stored priors.</p>
-<p>Evolutionary dynamics are implemented through a Fermi imitation process with mutation. At each step, a subset of agents may revise their strategy by probabilistically imitating more successful agents based on payoff differences.</p>
+<p>This paper develops an agent-based computational model of indirect reciprocity under the Stern Judging norm. The main computational task consists of simulating repeated gift-game interactions among heterogeneous agents under different informational environments: perfect information, noisy information, and noisy information with ambiguity aversion.</p>
+<p>Agents are characterized by reputational states and behavioral strategies (<code>ALLC</code>, <code>ALLD</code>, and <code>COND</code>). In each simulation step, an agent is randomly matched to interact in a donation game where cooperation decisions depend on the recipient’s reputation for conditional agents while ALLC and ALLD always cooperate and defect respectively. An action error is included such that with a low probability agents deviate from their strategy. In particular, in all three models with a probability of 0.02 ALLC defect and COND defect when Sj prescribes to cooperate (Ohtsuki and Iwasa, 2004).</p>
+<p>The evolution dynamics start with a population of only conditional players. Randomly, one agent at each step has a small probability (0.001) of randomly mutate kind. Every 50 step, to the probability of mutating is added the probability of learning according to the Fermi imitation rule the kind of another random agent if her average score is higher. The Fermi imitation rule is such that the higher the payoff of the random agent selected the higher the probability for the imitating agent to learn his kind (the strenght implemented is equal to 1).</p>
+<p>The models implement several computational procedures. Under Perfect Information, agents’ reputations are encoded in a vector whose i’s entry is updated truthfully according to Stern Judging every round agent i plays as donor. Conditional players takes into account in their strategy such reputations, when deciding their action.</p>
+<p>Under noisy information, agents may experience misperception errors or cannot observe the interaction. Agents’ reputation is now not univocally shared among all agents and can differ. The reputation system is then encoded, following Hilbe et al (2018), through a matrix where the i,j entry represents the reputation of agent j according to agent i. At every round where agent j plays, the jth column is updated: every agent i has a 0.9 probability of truthfully update the reputation of j according to the norm, a 0.05 probability of misperception, i.e.&nbsp;observing the opposite action implemented by the donor and then apply correctly to it SJ, and a 0.05 probability of not observing anything at all (so the entry stays the same).</p>
+<p>Under ambiguity aversion, agents maintain multiple priors over reputations and choose actions according to a maxmin expected utility criterion. Utilities are computed by evaluating the minimum expected payoff across stored priors. To each combination of action as donor and reputation of the recipient is assigned a cardinal utility: 1 when as donor the agent cooperates with a good recipient or defects with a bad recipient, 0 when as donor the agent cooperates with a bad recipient or defects with a good recipient. Then at each step an agent j plays as donor, as in the noisy information model, the jth column of an <span class="math inline">\(NxN\)</span> matrix is updated. However, in the ambiguity aversion model every i,j entry of this matrix is a vector itself. The elements of the vector are priors represented by the probability that agent j is good. Every agent can mantain a maximum of 5 priors. At each step that agent j plays as donor, with a probability 0f 0.9 every agent i updates one of its prior according to SJ (0.9 if the agent j was assessed as good, 0.1 if bad), with a probability of 0.05 she wrongly updates her priors according to a misperception error and with a probability 0.05 she adds a new prior equal to 0.5. If the maximum is reached she changes one of her existing prior with 0.5. The update rule of the priors wants to mirror the noisy condition. The existing priors are used then to define the strategy of he conditional player: at each step, the action implemented by COND is defined as the action maximizing the worst case scenario according to the priors held by the agent. There is no bayesian learning, i.e.&nbsp;priors are not updated by taking into account already existing priors. This is a possible future extension, given also the results obtained.</p>
 <p>The simulations are implemented in Julia using the <code>Agents.jl</code> framework for agent-based modeling. Additional packages include <code>Plots.jl</code>, <code>StatsPlots.jl</code>, <code>DataFrames.jl</code>, and <code>Statistics</code>. The replication package contains modular implementations for agent definitions, reputation updating, noisy information procedures, ambiguity updating rules, payoff calculations, and data collection routines. Outputs include time-series measures of cooperation rates, population composition, and average payoffs by strategy type.</p>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
-<p>The simulations reproduce the main findings of the literature on indirect reciprocity and Stern Judging. ## Perfect Information Under perfect information, agents can accurately observe the reputation of others. In this setting, conditional agents cooperate with reputable individuals and defect against badly reputed ones, successfully enforcing cooperative norms Under perfect information and with small implementation errors (“trembling hand”), conditional cooperators remain evolutionarily stable and sustain high levels of cooperation over time. The population quickly converges toward a state dominated by conditional agents, while unconditional defectors are unable to successfully invade the population. <img src="outputs/Population(PERFECTINFO).png" class="img-fluid"> This allows level of cooperations to stay high during the whole part of the evolutionary dynamics. <img src="outputs/Cooperation(PERFECTINFO).png" class="img-fluid"> After 100.000 rounds with 100 agents, the final level of cooperation is and population shares are the following:</p>
+<section id="perfect-information" class="level2">
+<h2 class="anchored" data-anchor-id="perfect-information">Perfect Information</h2>
+<p>The simulation replicates the main findings of the literature on indirect reciprocity and Stern Judging with perfect information. Under perfect information, agents can accurately observe the reputation of others. In this setting, conditional agents cooperate with reputable individuals and defect against badly reputed ones, successfully enforcing cooperative norms. The possibility of wrongly implementing the intended strategy allows Stern Judging to be an ESS without ALLC being a neutral mutant. Then, under perfect information and with small implementation errors, conditional cooperators remain evolutionarily stable and sustain high levels of cooperation over time. The population although oscillating stays most frequently in a state dominated by conditional agents, while unconditional defectors are unable to successfully invade the population.</p>
+<p><img src="outputs/Population(PERFECTINFO).png" class="img-fluid"></p>
+<p>This allows level of cooperations to stay high during the whole path of the evolutionary dynamics.</p>
+<p><img src="outputs/Cooperation(PERFECT%20INFO).png" class="img-fluid"></p>
+<p>The average level of cooperation in the last <span class="math inline">\(10 /times 10^2\)</span> step is 0.017.</p>
+</section>
 <section id="noisy-information" class="level2">
 <h2 class="anchored" data-anchor-id="noisy-information">Noisy Information</h2>
-<p>When reputational information becomes noisy or imperfect, the dynamics change substantially. Errors in observing reputations reduce the ability of conditional agents to correctly discriminate between cooperative and defective individuals. Consistent with the literature:</p>
+<p>In a noisy information setting, the simulation reproduces the findings by Hilbe et al (2018) of a complete decay of cooperation and extinction of conditional cooperators. When reputational information becomes noisy or imperfect, the dynamics change substantially. Errors in observing reputations reduce the ability of conditional agents to correctly discriminate between cooperative and defective individuals. Consistent with the literature:</p>
 <ul>
 <li>Conditional cooperators are progressively invaded by unconditional defectors (ALLD).</li>
 </ul>
@@ -123,18 +210,31 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Cooperation levels collapse over time.</li>
 </ul>
-<p><img src="outputs/Cooperation(Noisy).png" class="img-fluid"></p>
+<p><img src="outputs/Cooperation(NOISY).png" class="img-fluid"></p>
+<p>Indeed, the average level of cooperation in the last <span class="math inline">\(10 /times 10^2\)</span> step is 0.002.</p>
 <ul>
-<li>Reputation mechanisms become less effective under uncertainty.</li>
-<li>The population converges toward low-cooperation equilibria.</li>
+<li>Noisy reputation mechanims disrupt payoff dominance of conditional cooperators.</li>
 </ul>
+<p><img src="outputs/Payoff(NOISY).png" class="img-fluid"></p>
+<p><img src="outputs/Payoff(PERFECTINFO).png" class="img-fluid"></p>
+</section>
+<section id="ambiguity-averse-agent-under-noisy-information" class="level2">
+<h2 class="anchored" data-anchor-id="ambiguity-averse-agent-under-noisy-information">Ambiguity Averse Agent under Noisy Information</h2>
 <p>The ambiguity-averse extension produces qualitatively similar outcomes under imperfect information. Conditional agents still fail to sustain cooperation in the long run, and defectors eventually dominate the population.</p>
 <p>However, the simulations suggest that:</p>
 <ul>
-<li><p>The transition toward a whole population of defectors occurs more rapidly. <img src="outputs/Population(NOISY).png" class="img-fluid"> <img src="outputs/Population(AMBIGUITY).png" class="img-fluid"></p></li>
-<li><p>Cooperation deteriorates faster than in the standard noisy-information setting.</p></li>
-<li><p>Ambiguity aversion amplifies the destabilizing effect of informational uncertainty. Overall, the results highlight the central importance of reliable reputational information for sustaining indirect reciprocity. Even small imperfections in information transmission can undermine cooperative norms, while ambiguity aversion further accelerates the breakdown of cooperation.</p></li>
+<li>The transition toward a whole population of defectors seems to occur more rapidly.</li>
 </ul>
+<p><img src="outputs/Population(NOISY).png" class="img-fluid"></p>
+<p><img src="outputs/Population(AMBIGUITY).png" class="img-fluid"></p>
+<ul>
+<li>Cooperation deteriorates faster than in the standard noisy-information setting.</li>
+</ul>
+<p>Indeed, the average level of cooperation in the last <span class="math inline">\(10 /times 10^2\)</span> step is 0.004.</p>
+<ul>
+<li>Ambiguity aversion seems to amplify the destabilizing effect of informational uncertainty.</li>
+</ul>
+<p>The conclusion that can be drawn from this simulation is that having ambiguity averse conditional players that have a maxmin utility function as behavioural rule, as implemented with this model, does not improve the level of cooperation in a noisy environment and does not solve the evolutionary instability of Stern Judging.</p>
 </section>
 </section>
 
