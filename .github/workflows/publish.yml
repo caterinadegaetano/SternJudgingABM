@@ -36,10 +36,13 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Render report
-        run: quarto render report.qmd --to html --output-dir _site
+        run: quarto render report.qmd --to html --execute-debug
 
-      - name: Rename output to index.html
-        run: mv _site/report.html _site/index.html
+      - name: Move output into _site
+        run: |
+          mkdir -p _site
+          mv report.html _site/index.html
+          if [ -d "report_files" ]; then mv report_files _site/; fi
 
       - name: Disable Jekyll
         run: touch _site/.nojekyll
