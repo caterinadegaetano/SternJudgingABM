@@ -24,6 +24,7 @@
 *.dta
 *.DTA
 *.csv
+!outputs/*.csv
 *.CSV
 *.tsv
 *.TSV
