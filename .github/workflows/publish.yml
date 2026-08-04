@@ -35,6 +35,12 @@ jobs:
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      - name: Check file start for hidden characters
+        run: head -c 20 report.qmd | xxd
+
+      - name: Quarto diagnostics
+        run: quarto check
+
       - name: Render report
         run: quarto render report.qmd --to html --output index.html --output-dir _site
 
