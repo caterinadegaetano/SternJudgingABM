@@ -76,7 +76,11 @@ This allows level of cooperations to stay high during the whole path of the evol
 
 ![](outputs/Cooperation(PERFECT INFO).png)
 
-The average level of cooperation in the last $10 \times 10^2$ step is `{julia} round(final_coop_perfect, digits=3)`.
+```{julia}
+#| echo: false
+#| output: asis
+println("The average level of cooperation in the last \$10 \\times 10^2\$ step is ", round(final_coop_perfect, digits=3), ".")
+```
 
 ## Noisy Information
 In a noisy information setting, the simulation reproduces the findings by Hilbe et al (2018) of a complete decay of cooperation and extinction of conditional cooperators.
@@ -91,7 +95,11 @@ Consistent with the literature:
 
 ![](outputs/Cooperation(NOISY).png)
 
-Indeed, the average level of cooperation in the last $10 \times 10^2$ step is `{julia} round(final_coop_noisy, digits=3)`.
+```{julia}
+#| echo: false
+#| output: asis
+println("Indeed, the average level of cooperation in the last \$10 \\times 10^2\$ step is ", round(final_coop_noisy, digits=3), ".")
+```
 
 
 - Noisy reputation mechanims disrupt payoff dominance of conditional cooperators.
@@ -116,7 +124,11 @@ However, the simulations suggest that:
 - Cooperation deteriorates faster than in the standard noisy-information setting.
 
 
-Indeed, the average level of cooperation in the last $10 \times 10^2$ step is `{julia} round(final_coop_ambiguity, digits=3)`.
+```{julia}
+#| echo: false
+#| output: asis
+println("Indeed, the average level of cooperation in the last \$10 \\times 10^2\$ step is ", round(final_coop_ambiguity, digits=3), ".")
+```
 
 
 - Ambiguity aversion seems to amplify the destabilizing effect of informational uncertainty. 
