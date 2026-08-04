@@ -97,7 +97,7 @@ final_coop = mean(data_model.pct_cooperation[end-999:end])
 # cooperation over time
 p1 = plot(model.coop_window_log,
     title = "Cooperation rate over time (windowed, PERFECT INFO)",
-    xlabel = "block (each = $(Noisy_properties.coop_window) steps)",
+    xlabel = "block (each = $(properties.coop_window) steps)",
     ylabel = "cooperation rate")
 
 # kinds over time

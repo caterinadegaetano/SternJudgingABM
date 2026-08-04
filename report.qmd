@@ -49,7 +49,7 @@ cooperation by indirect reciprocity. J Theor Biol 239:435–444.
 
 This paper develops an agent-based computational model of indirect reciprocity under the Stern Judging norm. The main computational task consists of simulating repeated gift-game interactions among heterogeneous agents under different informational environments: perfect information, noisy information, and noisy information with ambiguity aversion.
 
-Agents are characterized by reputational states and behavioral strategies (`ALLC`, `ALLD`, and `COND`). In each simulation step, an agent is randomly matched to interact in a donation game where cooperation decisions depend on the recipient’s reputation for conditional agents while ALLC and ALLD always cooperate and defect respectively. An action error is included such that with a low probability agents deviate from their strategy. In particular, in all three models with a probability of 0.02 ALLC defect and COND defect when Sj prescribes to cooperate (Ohtsuki and Iwasa, 2004).
+Agents are characterized by reputational states and behavioral strategies (`ALLC`, `ALLD`, and `COND`). In each simulation step, an agent is randomly matched to interact in a donation game where cooperation decisions depend on the recipient’s reputation for conditional agents while ALLC and ALLD always cooperate and defect respectively. An action error is included such that with a low probability agents deviate from their strategy. In particular, in all three models with a probability of 0.02 `ALLC` defect and `COND` defect when Sj prescribes to cooperate (Ohtsuki and Iwasa, 2004).
 
 The evolution dynamics start with a population of only conditional players. Randomly, one agent at each step has a small probability (0.001) of randomly mutate kind. Every 50 step, to the probability of mutating is added the probability of learning according to the Fermi imitation rule the kind of another random agent if her average score is higher. The Fermi imitation rule is such that the higher the payoff of the random agent selected the higher the probability for the imitating agent to learn his kind (the strenght implemented is equal to 1).
 
@@ -58,7 +58,7 @@ Under Perfect Information, agents' reputations are encoded in a vector whose i's
 
 Under noisy information, agents may experience misperception errors or cannot observe the interaction. Agents' reputation is now not univocally shared among all agents and can differ. The reputation system is then encoded, following Hilbe et al (2018), through a matrix where the i,j entry represents the reputation of agent j according to agent i. At every round where agent j plays, the jth column is updated: every agent i has a 0.9 probability of truthfully update the reputation of j according to the norm, a 0.05 probability of misperception, i.e. observing the opposite action implemented by the donor and then apply correctly to it SJ, and a 0.05 probability of not observing anything at all (so the entry stays the same).
 
-Under ambiguity aversion, agents maintain multiple priors over reputations and choose actions according to a maxmin expected utility criterion. Utilities are computed by evaluating the minimum expected payoff across stored priors. To each combination of action as donor and reputation of the recipient is assigned a cardinal utility: 1 when as donor the agent cooperates with a good recipient or defects with a bad recipient, 0 when as donor the agent cooperates with a bad recipient or defects with a good recipient. Then at each step an agent j plays as donor, as in the noisy information model, the jth column of an $NxN$ matrix is updated. However, in the ambiguity aversion model every i,j entry of this matrix is a vector itself. The elements of the vector are priors represented by the probability that agent j is good. Every agent can mantain a maximum of 5 priors. At each step that agent j plays as donor, with a probability 0f 0.9 every agent i updates one of its prior according to SJ (0.9 if the agent j was assessed as good, 0.1 if bad), with a probability of 0.05 she wrongly updates her priors according to a misperception error and with a probability 0.05 she adds a new prior equal to 0.5. If the maximum is reached she changes one of her existing prior with 0.5. The update rule of the priors wants to mirror the noisy condition. The existing priors are used then to define the strategy of he conditional player: at each step, the action implemented by COND is defined as the action maximizing the worst case scenario according to the priors held by the agent. There is no bayesian learning, i.e. priors are not updated by taking into account already existing priors. This is a possible future extension, given also the results obtained.
+Under ambiguity aversion, agents maintain multiple priors over reputations and choose actions according to a maxmin expected utility criterion. Utilities are computed by evaluating the minimum expected payoff across stored priors. To each combination of action as donor and reputation of the recipient is assigned a cardinal utility: 1 when as donor the agent cooperates with a good recipient or defects with a bad recipient, 0 when as donor the agent cooperates with a bad recipient or defects with a good recipient. Then at each step an agent j plays as donor, as in the noisy information model, the jth column of an $NxN$ matrix is updated. However, in the ambiguity aversion model every i,j entry of this matrix is a vector itself. The elements of the vector are priors represented by the probability that agent j is good. Every agent can mantain a maximum of 5 priors. At each step that agent j plays as donor, with a probability 0f 0.9 every agent i updates one of its prior according to SJ (0.9 if the agent j was assessed as good, 0.1 if bad), with a probability of 0.05 she wrongly updates her priors according to a misperception error and with a probability 0.05 she adds a new prior equal to 0.5. If the maximum is reached she changes one of her existing prior with 0.5. The update rule of the priors wants to mirror the noisy condition. The existing priors are used then to define the strategy of he conditional player: at each step, the action implemented by `COND` is defined as the action maximizing the worst case scenario according to the priors held by the agent. There is no bayesian learning, i.e. priors are not updated by taking into account already existing priors. This is a possible future extension, given also the results obtained.
 
 
 The simulations are implemented in Julia using the `Agents.jl` framework for agent-based modeling. Additional packages include `Plots.jl`, `StatsPlots.jl`, `DataFrames.jl`, and `Statistics`. The replication package contains modular implementations for agent definitions, reputation updating, noisy information procedures, ambiguity updating rules, payoff calculations, and data collection routines. Outputs include time-series measures of cooperation rates, population composition, and average payoffs by strategy type.
@@ -67,14 +67,14 @@ The simulations are implemented in Julia using the `Agents.jl` framework for age
 
 ## Perfect Information 
 The simulation replicates the main findings of the literature on indirect reciprocity and Stern Judging with perfect information.
-Under perfect information, agents can accurately observe the reputation of others. In this setting, conditional agents cooperate with reputable individuals and defect against badly reputed ones, successfully enforcing cooperative norms. The possibility of wrongly implementing the intended strategy allows Stern Judging to be an ESS without ALLC being a neutral mutant. 
+Under perfect information, agents can accurately observe the reputation of others. In this setting, conditional agents cooperate with reputable individuals and defect against badly reputed ones, successfully enforcing cooperative norms. The possibility of wrongly implementing the intended strategy allows `COND` to be an ESS without `ALLC` being a neutral mutant. 
 Then, under perfect information and with small implementation errors, conditional cooperators remain evolutionarily stable and sustain high levels of cooperation over time. The population although oscillating stays most frequently in a state dominated by conditional agents, while unconditional defectors are unable to successfully invade the population.
 
-![](outputs/Population(PERFECTINFO).png)
+![](<outputs/Population(PERFECTINFO).png>)
 
 This allows level of cooperations to stay high during the whole path of the evolutionary dynamics.
 
-![](outputs/Cooperation(PERFECT INFO).png)
+![](<outputs/Cooperation(PERFECT INFO).png>)
 
 ```{julia}
 #| echo: false
@@ -89,11 +89,11 @@ Consistent with the literature:
 
 - Conditional cooperators are progressively invaded by unconditional defectors (ALLD).
 
-![](outputs/Population(NOISY).png)
+![](<outputs/Population(NOISY).png>)
 
 - Cooperation levels collapse over time.
 
-![](outputs/Cooperation(NOISY).png)
+![](<outputs/Cooperation(NOISY).png>)
 
 ```{julia}
 #| echo: false
@@ -104,9 +104,9 @@ println("Indeed, the average level of cooperation in the last \$10 \\times 10^2\
 
 - Noisy reputation mechanims disrupt payoff dominance of conditional cooperators.
 
-![](outputs/Payoff(NOISY).png)
+![](<outputs/Payoff(NOISY).png>)
 
-![](outputs/Payoff(PERFECTINFO).png)
+![](<outputs/Payoff(PERFECTINFO).png>)
 
 
 ## Ambiguity Averse Agent under Noisy Information
@@ -117,9 +117,9 @@ However, the simulations suggest that:
 
 - The transition toward a whole population of defectors seems to occur more rapidly.
 
-![](outputs/Population(NOISY).png)
+![](<outputs/Population(NOISY).png>)
 
-![](outputs/Population(AMBIGUITY).png)
+![](<outputs/Population(AMBIGUITY).png>)
 
 - Cooperation deteriorates faster than in the standard noisy-information setting.
 
