@@ -35,11 +35,11 @@ jobs:
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Inspect engine selection
-        run: quarto inspect report.qmd
-
       - name: Render report
-        run: quarto render report.qmd --to html --output index.html --output-dir _site --execute-debug
+        run: quarto render report.qmd --to html --output-dir _site
+
+      - name: Rename output to index.html
+        run: mv _site/report.html _site/index.html
 
       - name: Disable Jekyll
         run: touch _site/.nojekyll
