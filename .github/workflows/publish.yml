@@ -24,7 +24,7 @@ jobs:
       - name: Setup Julia
         uses: julia-actions/setup-julia@v2
         with:
-          version: '1.10'
+          version: '1.12.6'
 
       - name: Instantiate Julia project
         run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
@@ -34,15 +34,6 @@ jobs:
 
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-
-      - name: Julia diagnostics
-        run: |
-          which julia
-          julia --version
-          julia -e 'using Pkg; Pkg.status()'
-
-      - name: Render TEST file
-        run: quarto render test.qmd --to html --execute-debug
 
       - name: Render report
         run: quarto render report.qmd --to html --output index.html --output-dir _site --execute-debug

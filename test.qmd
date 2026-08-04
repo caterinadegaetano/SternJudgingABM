@@ -1,8 +1,0 @@
----
-title: "Engine test"
-engine: julia
----
-
-```{julia}
-1 + 1
-```
