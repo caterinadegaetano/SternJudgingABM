@@ -35,6 +35,9 @@ jobs:
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      - name: Inspect engine selection
+        run: quarto inspect report.qmd
+
       - name: Render report
         run: quarto render report.qmd --to html --output index.html --output-dir _site --execute-debug
 
