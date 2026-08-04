@@ -23,8 +23,7 @@
 *.SAS7BDAT
 *.dta
 *.DTA
-*.csv
-!outputs/*.csv
+*.csv 
 *.CSV
 *.tsv
 *.TSV
@@ -138,7 +137,7 @@ confidential-data-not-for-publication/**
 !generated/**
 !images/
 !images/**
-
+!outputs/*.csv
 
 !R*.txt
 !R*.TXT
