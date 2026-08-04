@@ -1,3 +1,13 @@
+---
+title: "CCA `CompEcon` Project"
+subtitle: "Agent Based Model inspired by Christian Hilbe, Laura Schmid, Josef Tkadlec, Krishnendu Chatterjee, and Martin A. Nowak (PNAS, 2018)"
+author: 
+  - name: Caterina De Gaetano
+    orcid: 0000-0000-0000-0000
+    email: caterina.degaetano@carloalberto.org
+    affiliations: Uni Turin, Collegio Carlo Alberto
+engine: julia
+---
 
 ```{julia}
 using CSV, DataFrames
@@ -11,18 +21,6 @@ final_coop_noisy = noisy_summary.av_final_coop[1]
 ambiguity_summary = CSV.read("outputs/ambiguity_summary.csv", DataFrame)
 final_coop_ambiguity = ambiguity_summary.av_final_coop[1]
 ```
----
-title: "CCA `CompEcon` Project"
-subtitle: "Agent Based Model inspired by Christian Hilbe, Laura Schmid, Josef Tkadlec, Krishnendu Chatterjee, and Martin A. Nowak (PNAS, 2018)"
-author: 
-  - name: Caterina De Gaetano
-    orcid: 0000-0000-0000-0000
-    email: caterina.degaetano@carloalberto.org
-    affiliations: Uni Turin, Collegio Carlo Alberto
-
-
----
-
 
 ::: {.callout-note}
 
@@ -78,7 +76,7 @@ This allows level of cooperations to stay high during the whole path of the evol
 
 ![](outputs/Cooperation(PERFECT INFO).png)
 
-The average level of cooperation in the last $10 /times 10^2$ step is `{julia} round(final_coop_perfect, digits=3)`.
+The average level of cooperation in the last $10 \times 10^2$ step is `{julia} round(final_coop_perfect, digits=3)`.
 
 ## Noisy Information
 In a noisy information setting, the simulation reproduces the findings by Hilbe et al (2018) of a complete decay of cooperation and extinction of conditional cooperators.
@@ -93,7 +91,7 @@ Consistent with the literature:
 
 ![](outputs/Cooperation(NOISY).png)
 
-Indeed, the average level of cooperation in the last $10 /times 10^2$ step is `{julia} round(final_coop_noisy, digits=3)`.
+Indeed, the average level of cooperation in the last $10 \times 10^2$ step is `{julia} round(final_coop_noisy, digits=3)`.
 
 
 - Noisy reputation mechanims disrupt payoff dominance of conditional cooperators.
@@ -118,10 +116,9 @@ However, the simulations suggest that:
 - Cooperation deteriorates faster than in the standard noisy-information setting.
 
 
-Indeed, the average level of cooperation in the last $10 /times 10^2$ step is `{julia} round(final_coop_ambiguity, digits=3)`.
+Indeed, the average level of cooperation in the last $10 \times 10^2$ step is `{julia} round(final_coop_ambiguity, digits=3)`.
 
 
 - Ambiguity aversion seems to amplify the destabilizing effect of informational uncertainty. 
 
 The conclusion that can be drawn from this simulation is that having ambiguity averse conditional players that have a maxmin utility function as behavioural rule, as implemented with this model, does not improve the level of cooperation in a noisy environment and does not solve the evolutionary instability of Stern Judging. 
-
