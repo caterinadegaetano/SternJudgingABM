@@ -41,6 +41,9 @@ jobs:
           julia --version
           julia -e 'using Pkg; Pkg.status()'
 
+      - name: Render TEST file
+        run: quarto render test.qmd --to html --execute-debug
+
       - name: Render report
         run: quarto render report.qmd --to html --output index.html --output-dir _site --execute-debug
 
