@@ -16,8 +16,7 @@ function pct_COND(model)
 end
 #final percentage of cooperation
 function pct_cooperation(model)
-    total_given = sum(ag.C_given for ag in allagents(model))
-    return total_given / nagents(model)
+    return any(ag.strategy == :C for ag in allagents(model)) ? 1.0 : 0.0
 end
 #payoff by kind
 function mean_payoff_ALLC(model)

@@ -43,6 +43,7 @@ jobs:
           mkdir -p _site
           mv report.html _site/index.html
           if [ -d "report_files" ]; then mv report_files _site/; fi
+          cp -r outputs _site/outputs
 
       - name: Disable Jekyll
         run: touch _site/.nojekyll
